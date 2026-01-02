@@ -108,6 +108,55 @@ h2 {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+.room-id-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.room-label {
+  color: white;
+  font-weight: bold;
+  font-size: 0.95em;
+}
+
+.room-id-value {
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.copy-button {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9em;
+  transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.copy-button:active {
+  transform: scale(0.95);
+}
+
 .player-info {
   display: flex;
   justify-content: space-around;

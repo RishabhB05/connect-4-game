@@ -13,7 +13,8 @@ export const Board = ({ onLeaveRoom }) => {
         resetGame,
         playerName,
         leaveRoom,
-        socket
+        socket,
+        roomId
     } = useSocket();
 
     const [board, setBoard] = useState(null);
@@ -47,6 +48,20 @@ export const Board = ({ onLeaveRoom }) => {
     return (
         <div className="game-container">
             <div className="game-header">
+                <div className="room-id-display">
+                    <span className="room-label">Room ID:</span>
+                    <span className="room-id-value">{roomId}</span>
+                    <button 
+                        className="copy-button"
+                        onClick={() => {
+                            navigator.clipboard.writeText(roomId);
+                            alert('Room ID copied to clipboard!');
+                        }}
+                    >
+                        📋 Copy
+                    </button>
+                </div>
+                
                 <div className="player-info">
                     <div className="player-item my-player">
                         <div className="player-color" style={{ backgroundColor: myColor }}></div>
