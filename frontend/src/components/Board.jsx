@@ -1,146 +1,113 @@
 import React, { useState, useEffect } from "react";
 import { Slot } from "./Slot";
+import { useSocket } from "../context/SocketContext";
 
+export const Board = ({ onLeaveRoom }) => {
+    const {
+        gameState,
+        currentPlayer,
+        gameOver,
+        winner,
+        players,
+        makeMove,
+        resetGame,
+        playerName,
+        leaveRoom,
+        socket
+    } = useSocket();
 
-export const Board = () => {
-    // 6 rows, 7 columns
-    // Could have done with a nested for loop but this way is more visual
-    const [board, setBoard] = useState([
-        ['', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '']
-    ]);
+    const [board, setBoard] = useState(null);
+    const [isMyTurn, setIsMyTurn] = useState(false);
 
-    const [currPlayer, setCurrPlayer] = useState('X');
-    const [oppPlayer, setOppPlayer] = useState('O');
-    const [gameOver, setGameOver] = useState(false);
-
-
-    const checkWin = (row, column, ch) => {
-        // EXERCISE: This function does not cover all possible winning combinations. Edit the code to cover all possibilities. A working solution in C# (don't worry--if you know JavaScript you should understand most of it) exists at https://dotnetfiddle.net/FZGpbS Line #128
-        try {
-            if (board[row + 1][column] === ch) {
-                if (board[row + 2][column] === ch) {
-                    if (board[row + 3][column] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row + 1][column + 1] === ch) {
-                if (board[row + 2][column + 2] === ch) {
-                    if (board[row + 3][column + 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row + 1][column - 1] === ch) {
-                if (board[row + 2][column - 2] === ch) {
-                    if (board[row + 3][column - 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row][column + 1] === ch) {
-                if (board[row][column + 2] === ch) {
-                    if (board[row][column + 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row][column - 1] === ch) {
-                if (board[row][column - 2] === ch) {
-                    if (board[row][column - 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row - 1][column - 1] === ch) {
-                if (board[row - 2][column - 2] === ch) {
-                    if (board[row - 3][column - 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-
-        try {
-            if (board[row - 1][column + 1] === ch) {
-                if (board[row - 2][column + 2] === ch) {
-                    if (board[row - 3][column + 3] === ch) {
-                        return true;
-                    }
-                }
-            }
-        } catch (e) { console.log(e) }
-    };
-
-    const updateBoard = (row, column, ch) => {
-        setBoard(prev => {
-            const boardCopy = [...prev];
-            boardCopy[row][column] = ch;
-            return boardCopy;
-        });
-        return checkWin(row, column, ch);
-    };
-
+    useEffect(() => {
+        if (gameState) {
+            setBoard(gameState.board);
+            
+            // Determine if it's the current player's turn based on their color
+            const myColor = players.find(p => p.name === playerName)?.color;
+            setIsMyTurn(myColor === currentPlayer);
+        }
+    }, [gameState, currentPlayer, playerName, players]);
 
     const handleClick = (e) => {
-        const column = e.target.getAttribute('x');
-        let row = board.findIndex((rowArr, index) => {
-            // Find the first row that is occupied or at the bottom of the board
-            return (rowArr[column] !== '' || (index === board.length - 1));
-        });
-        // Only go up one row if the slot is NOT at the bottom
-        if (row !== (board.length - 1)) row -= 1;
-        if (board[row][column] !== '') row -= 1;
+        if (!isMyTurn || gameOver || !socket) return;
 
-
-
-        setGameOver(updateBoard(row, column, currPlayer));
-
-
-        if (!gameOver) {
-            // Swap players
-            const currPlayerCopy = currPlayer;
-            setCurrPlayer(oppPlayer);
-            setOppPlayer(currPlayerCopy);
-        }
-
+        const column = parseInt(e.target.getAttribute('x'));
+        makeMove(column);
     };
 
+    if (!board || !gameState) {
+        return <div className="board-loading">Loading game...</div>;
+    }
+
+    const myColor = players.find(p => p.name === playerName)?.color;
+    const opponentColor = myColor === 'red' ? 'yellow' : 'red';
+    const opponentName = players.find(p => p.color === opponentColor)?.name || 'Waiting...';
 
     return (
-        <>
-            {gameOver && (
-                <h1>Game Over! {oppPlayer == 'X' ? 'Red' : 'Black'} Wins!</h1>
-            )}
-            <h2 id='playerDisplay'>{currPlayer === 'X' ? 'Red' : 'Black'} Move</h2>
-            <div id='board'
-                onClick={gameOver ? null : handleClick}
-            >
+        <div className="game-container">
+            <div className="game-header">
+                <div className="player-info">
+                    <div className="player-item my-player">
+                        <div className="player-color" style={{ backgroundColor: myColor }}></div>
+                        <div className="player-name">{playerName} (You)</div>
+                    </div>
+                    <div className="vs">vs</div>
+                    <div className="player-item opponent-player">
+                        <div className="player-color" style={{ backgroundColor: opponentColor }}></div>
+                        <div className="player-name">{opponentName}</div>
+                    </div>
+                </div>
+                
+                {!gameOver && (
+                    <h2 id='playerDisplay' className={isMyTurn ? 'my-turn' : 'opponent-turn'}>
+                        {isMyTurn ? 'Your Turn' : `${opponentName}'s Turn`}
+                    </h2>
+                )}
+            </div>
 
+            {gameOver && (
+                <div className="game-over-message">
+                    <h2>Game Over!</h2>
+                    {winner ? (
+                        <p className="winner-text">
+                            {winner === myColor ? `🎉 You Win! 🎉` : `${opponentName} Wins!`}
+                        </p>
+                    ) : (
+                        <p className="draw-text">It's a Draw!</p>
+                    )}
+                </div>
+            )}
+
+            <div 
+                id='board'
+                className="board-grid"
+                onClick={!gameOver && isMyTurn ? handleClick : null}
+                style={{ cursor: isMyTurn && !gameOver ? 'pointer' : 'default' }}
+            >
                 {board.map((row, i) => {
-                    return row.map((ch, j) => <Slot ch={ch} y={i} x={j} />);
+                    return row.map((ch, j) => (
+                        <Slot key={`${i}-${j}`} ch={ch} y={i} x={j} />
+                    ));
                 })}
             </div>
-        </>
+
+            <div className="game-controls">
+                {gameOver && (
+                    <button onClick={resetGame} className="btn btn-primary">
+                        Play Again
+                    </button>
+                )}
+                <button 
+                    onClick={() => {
+                        leaveRoom();
+                        onLeaveRoom();
+                    }} 
+                    className="btn btn-secondary"
+                >
+                    Leave Room
+                </button>
+            </div>
+        </div>
     );
 };

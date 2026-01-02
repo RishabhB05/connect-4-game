@@ -1,8 +1,14 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Arial', sans-serif;
+}
+
 #board {
   width: 840px;
   height: 700px;
   padding: 20px 0;
-  margin: auto;
+  margin: 0 auto;
   border-left: 50px solid blue;
   border-right: 50px solid blue;
   display: flex;
@@ -10,6 +16,22 @@
   align-content: flex-start;
   gap: 20px;
   background: yellow;
+}
+
+.board-grid {
+  width: 840px;
+  height: 700px;
+  padding: 20px 0;
+  margin: 30px auto;
+  border-left: 50px solid blue;
+  border-right: 50px solid blue;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 20px;
+  background: yellow;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .slot {
@@ -30,6 +52,14 @@ h1 {
   text-align: center;
   font-family: sans-serif;
   font-size: 40px;
+  color: white;
+  margin-top: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .slot img {
@@ -41,4 +71,187 @@ h1 {
   font-size: 15px;
   text-align: center;
   margin-bottom: 50px;
+  color: #333;
+  font-weight: bold;
+}
+
+#playerDisplay.my-turn {
+  color: #4caf50;
+  font-size: 18px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+#playerDisplay.opponent-turn {
+  color: #ff9800;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.game-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.game-header {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.player-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.player-color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.player-name {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.my-player {
+  background: #e8f5e9;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.opponent-player {
+  background: #fff3e0;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #ff9800;
+}
+
+.vs {
+  font-weight: bold;
+  color: #999;
+  font-size: 1.2em;
+  margin: 0 10px;
+}
+
+.game-over-message {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.game-over-message h2 {
+  margin: 0 0 15px 0;
+  font-size: 2em;
+}
+
+.winner-text {
+  color: #4caf50;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.draw-text {
+  color: #ff9800;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.game-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-size: 1em;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.board-loading {
+  text-align: center;
+  padding: 40px;
+  color: white;
+  font-size: 1.3em;
+  margin-top: 60px;
+}
+
+@media (max-width: 900px) {
+  .board-grid {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 6;
+    border-left: 20px solid blue;
+    border-right: 20px solid blue;
+  }
+
+  .slot {
+    width: 12.8%;
+    height: auto;
+    aspect-ratio: 1;
+  }
 }
