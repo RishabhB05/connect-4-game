@@ -3,8 +3,13 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import gameRoutes from './routes/gameRoutes.js';
 import { initializeGameRoom, handleGameMove, handleResetGame, cleanupRoom } from './controllers/multiplayerController.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -25,6 +30,16 @@ app.use(express.json());
 
 // Routes
 app.use('/api', gameRoutes);
+
+// Serve static files from React build (for production)
+if (process.env.NODE_ENV === 'production') {
+  const frontendBuildPath = path.join(__dirname, '../frontend/build');
+  app.use(express.static(frontendBuildPath));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
+}
 
 // Health check
 app.get('/api/health', (req, res) => {
