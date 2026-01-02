@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import redToken from '../assets/red token.svg';
-import blackToken from '../assets/black token.svg';
+import React from 'react';
 
 export const Slot = ({ ch, y, x }) => {
+    const getSlotColor = () => {
+        if (ch === 'red') return 'red';
+        if (ch === 'blue') return 'blue';
+        return 'lightgray';
+    };
 
     return (
-        <div className='slot' x={x} y={y}>
-            {ch && (
-                <img src={ch === 'X' ? redToken : blackToken} width='100%' height='100%' />
-            )}
+        <div 
+            className='slot' 
+            x={x} 
+            y={y}
+            style={{ 
+                background: getSlotColor(),
+                border: ch ? '3px solid #333' : 'none'
+            }}
+        >
         </div>
     );
 };

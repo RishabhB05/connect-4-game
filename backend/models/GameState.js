@@ -4,7 +4,7 @@ export class GameState {
     this.rows = rows;
     this.cols = cols;
     this.board = this.initializeBoard();
-    this.currentPlayer = 'red'; // 'red' or 'yellow'
+    this.currentPlayer = 'red'; // 'red' or 'blue'
     this.gameOver = false;
     this.winner = null;
   }
@@ -53,7 +53,7 @@ export class GameState {
         }
 
         // Switch player
-        this.currentPlayer = this.currentPlayer === 'red' ? 'yellow' : 'red';
+        this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
 
         return { 
           success: true, 

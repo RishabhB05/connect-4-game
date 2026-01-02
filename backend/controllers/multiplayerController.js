@@ -18,7 +18,7 @@ export const initializeGameRoom = (roomId, playerId, playerName) => {
   
   // Add player if not already in room
   if (!room.playerMap[playerId]) {
-    const playerColor = room.players.length === 0 ? 'red' : 'yellow';
+    const playerColor = room.players.length === 0 ? 'red' : 'blue';
     
     room.playerMap[playerId] = {
       id: playerId,

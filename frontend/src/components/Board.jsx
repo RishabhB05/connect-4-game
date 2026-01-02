@@ -30,6 +30,27 @@ export const Board = ({ onLeaveRoom }) => {
         }
     }, [gameState, currentPlayer, playerName, players]);
 
+    // Show alert when game ends
+    useEffect(() => {
+        if (gameOver && winner) {
+            const myColor = players.find(p => p.name === playerName)?.color;
+            const winnerPlayer = players.find(p => p.color === winner);
+            const winnerName = winnerPlayer?.name || winner;
+            
+            setTimeout(() => {
+                if (winner === myColor) {
+                    alert(`🎉 ${winnerName} won! 🎉`);
+                } else {
+                    alert(`${winnerName} won!`);
+                }
+            }, 500);
+        } else if (gameOver && !winner) {
+            setTimeout(() => {
+                alert("It's a draw!");
+            }, 500);
+        }
+    }, [gameOver, winner, players, playerName]);
+
     const handleClick = (e) => {
         if (!isMyTurn || gameOver || !socket) return;
 
@@ -42,7 +63,7 @@ export const Board = ({ onLeaveRoom }) => {
     }
 
     const myColor = players.find(p => p.name === playerName)?.color;
-    const opponentColor = myColor === 'red' ? 'yellow' : 'red';
+    const opponentColor = myColor === 'red' ? 'blue' : 'red';
     const opponentName = players.find(p => p.color === opponentColor)?.name || 'Waiting...';
 
     return (
