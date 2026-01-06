@@ -54,8 +54,14 @@ export const Board = ({ onLeaveRoom }) => {
     const handleClick = (e) => {
         if (!isMyTurn || gameOver || !socket) return;
 
-        const column = parseInt(e.target.getAttribute('x'));
-        makeMove(column);
+        // Find the slot element that was clicked (traverse up DOM if needed)
+        let slotElement = e.target.closest('.slot');
+        if (!slotElement) return;
+
+        const column = parseInt(slotElement.getAttribute('x'));
+        if (column !== undefined && !isNaN(column)) {
+            makeMove(column);
+        }
     };
 
     if (!board || !gameState) {
